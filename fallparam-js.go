@@ -1,64 +1,83 @@
 package main
 
 import (
-    "flag"
-    "fmt"
-    "io/ioutil"
-    "net/http"
-    "regexp"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"os"
+	"regexp"
 )
 
+const version = "1.0.0"
+
 func main() {
-    url := flag.String("d", "", "website URL")
-    help := flag.Bool("h", false, "help")
-    flag.Parse()
+	// بررسی تعداد آرگومان‌ها
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: fallparam -d <website>")
+		return
+	}
 
-    if *help {
-        flag.PrintDefaults()
-        return
-    }
+	// بررسی آرگومان‌ها
+	var website string
+	var update bool
+	for i := 1; i < len(os.Args); i++ {
+		switch os.Args[i] {
+		case "-d":
+			if i+1 < len(os.Args) {
+				website = os.Args[i+1]
+			}
+		case "-v":
+			fmt.Println("Version:", version)
+			return
+		case "-up":
+			update = true
+		}
+	}
 
-    if *url == "" {
-        fmt.Println("Please provide a website URL with the -d flag")
-        return
-    }
+	// بررسی آدرس وب سایت
+	if website == "" {
+		fmt.Println("Usage: fallparam -d <website>")
+		return
+	}
 
-    resp, err := http.Get(*url)
-    if err != nil {
-        fmt.Println("Error:", err)
-        return
-    }
-    defer resp.Body.Close()
+	// باز کردن صفحه وب سایت
+	response, err := http.Get(website)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer response.Body.Close()
 
-    body, err := ioutil.ReadAll(resp.Body)
-    if err != nil {
-        fmt.Println("Error:", err)
-        return
-    }
+	// خواندن محتوای صفحه وب سایت
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-    re1 := regexp.MustCompile(`\bvar\s+\w+\b`)
-    re2 := regexp.MustCompile(`\bconst\s+\w+\b`)
-    re3 := regexp.MustCompile(`\blet\s+\w+\b`)
-    re4 := regexp.MustCompile(`\bJSON\.parse\(`)
+	// استفاده از عبارت منظم برای پیدا کردن نام‌های متغیرها در جاوا اسکریپت
+	varNameRegex := regexp.MustCompile(`\bvar\s+(\w+)\s+=`)
+	variables := varNameRegex.FindAllStringSubmatch(string(body), -1)
 
-    vars := re1.FindAllString(string(body), -1)
-    consts := re2.FindAllString(string(body), -1)
-    lets := re3.FindAllString(string(body), -1)
-    jsons := re4.FindAllString(string(body), -1)
+	// استفاده از عبارت منظم برای پیدا کردن JSON object در فایل‌های جاوا اسکریپت
+	jsonRegex := regexp.MustCompile(`\bJSON\.parse\((.*?)\)`)
+	jsonObjects := jsonRegex.FindAllStringSubmatch(string(body), -1)
 
-    fmt.Println("JavaScript variables names:")
-    for _, v := range vars {
-        fmt.Println(v)
-    }
-    for _, c := range consts {
-        fmt.Println(c)
-    }
-    for _, l := range lets {
-        fmt.Println(l)
-    }
+	// چاپ نام‌های متغیرها
+	fmt.Println("JavaScript variables names:")
+	for _, match := range variables {
+		fmt.Println(match[1])
+	}
 
-    fmt.Println("JSON object in JavaScript files:")
-    for _, j := range jsons {
-        fmt.Println(j)
-    }
+	// چاپ JSON objects
+	fmt.Println("JSON object in JavaScript files:")
+	for _, match := range jsonObjects {
+		fmt.Println(match[1])
+	}
+
+	// بروزرسانی ابزار
+	if update {
+		fmt.Println("Updating fallparam...")
+		// TODO: Add update code here
+		fmt.Println("Update complete!")
+	}
 }
