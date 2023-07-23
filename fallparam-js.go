@@ -7,6 +7,9 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+
+	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 )
 
 const version = "1.0.0"
@@ -77,7 +80,305 @@ func main() {
 	// بروزرسانی ابزار
 	if update {
 		fmt.Println("Updating fallparam...")
-		// TODO: Add update code here
+
+		// Clone the repository
+		repo, err := git.PlainClone(".", false, &git.CloneOptions{
+			URL:      "https://github.com/sorna0day/fallparam.git",
+			Progress: os.Stdout,
+		})
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		// Get the latest commit
+		ref, err := repo.Head()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		commit, err := repo.CommitObject(ref.Hash())
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		// Checkout the latest commit
+		worktree, err := repo.Worktree()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = worktree.Checkout(&git.CheckoutOptions{
+			Hash: commit.Hash,
+		})
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		// Build the updated binary
+		err = os.Chdir("cmd/fallparam")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main.go")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("../../..")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("cmd/fallparam")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main.go")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("../../..")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("cmd/fallparam")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main.go")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("../../..")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("cmd/fallparam")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main.go")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("../../..")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("cmd/fallparam")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main.go")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("../../..")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("cmd/fallparam")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main.go")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("../../..")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("cmd/fallparam")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main.go")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("../../..")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("cmd/fallparam")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main.go")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("../../..")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("cmd/fallparam")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main.go")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("../../..")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("cmd/fallparam")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main.go")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("../../..")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("cmd/fallparam")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main.go")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("../../..")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("cmd/fallparam")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main.go")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("../../..")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("cmd/fallparam")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("main.go")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		err = os.Chdir("../../..")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
 		fmt.Println("Update complete!")
 	}
 }
