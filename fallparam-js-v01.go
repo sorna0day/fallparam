@@ -57,6 +57,9 @@ func main() {
 		jsonRegex := regexp.MustCompile(`\bJSON\.parse\((.*?)\)`)
 		jsonObjects := jsonRegex.FindAllStringSubmatch(string(body), -1)
 
+		objectFileRegex := regexp.MustCompile(`var\s+(\w+)\s+=\s+({.*?})`)
+		objectFiles := objectFileRegex.FindAllStringSubmatch(string(body), -1)
+
 		fmt.Println("JavaScript variables names:")
 		for _, match := range variables {
 			fmt.Println(match[1])
@@ -65,6 +68,12 @@ func main() {
 		fmt.Println("JSON object in JavaScript files:")
 		for _, match := range jsonObjects {
 			fmt.Println(match[1])
+		}
+
+		fmt.Println("Object files:")
+		for _, match := range objectFiles {
+			fmt.Println(match[1])
+			fmt.Println(match[2])
 		}
 	default:
 		fmt.Println("Usage: fallparam -d <website>")
