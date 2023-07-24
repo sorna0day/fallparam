@@ -6,7 +6,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"regexp"
+	"runtime"
 )
 
 const version = "1.0.0"
@@ -28,10 +30,21 @@ func main() {
 		fmt.Println("fallparam version", version)
 	case "update-":
 		fmt.Println("Updating fallparam...")
-		// TODO: Implement update command
+		cmd := exec.Command("git", "pull")
+		cmd.Dir = "/root/go/bin/fallparam "
+		err := cmd.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("fallparam updated successfully")
 	case "-r":
 		fmt.Println("Removing fallparam...")
-		// TODO: Implement remove command
+		cmd := exec.Command("rm", "-rf", "/root/go/bin/fallparam ")
+		err := cmd.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("fallparam removed successfully")
 	case "-d":
 		if len(os.Args) < 3 {
 			fmt.Println("Usage: fallparam -d <website>")
@@ -57,9 +70,6 @@ func main() {
 		jsonRegex := regexp.MustCompile(`\bJSON\.parse\((.*?)\)`)
 		jsonObjects := jsonRegex.FindAllStringSubmatch(string(body), -1)
 
-		objectFileRegex := regexp.MustCompile(`var\s+(\w+)\s+=\s+({.*?})`)
-		objectFiles := objectFileRegex.FindAllStringSubmatch(string(body), -1)
-
 		fmt.Println("JavaScript variables names:")
 		for _, match := range variables {
 			fmt.Println(match[1])
@@ -69,13 +79,19 @@ func main() {
 		for _, match := range jsonObjects {
 			fmt.Println(match[1])
 		}
-
-		fmt.Println("Object files:")
-		for _, match := range objectFiles {
-			fmt.Println(match[1])
-			fmt.Println(match[2])
-		}
 	default:
 		fmt.Println("Usage: fallparam -d <website>")
+	}
+
+	if runtime.GOOS == "linux" {
+		fmt.Println("This is a Linux system")
+	} else if runtime.GOOS == "windows" {
+		fmt.Println("This is a Windows system")
+	} else if runtime.GOOS == "darwin" {
+		fmt.Println("This is a macOS system")
+	}
+
+	if len(os.Args) > 1 && os.Args[1] == "fallparam" {
+		fmt.Println("fallparam")
 	}
 }
